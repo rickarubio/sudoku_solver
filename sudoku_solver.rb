@@ -13,32 +13,31 @@ class SudokuGrid
     answer_array = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     puzzle_row_complete_counter = 0
 
-    until puzzle_row_complete_counter == 2
+    until puzzle_row_complete_counter == 1
       # erase the scratchpad and try again
       scratch_pad_grid = @grid_values
+      # find all zeroes and assign them a random number
+      until scratch_pad_grid.flatten.include?(0) == false
+        random_number = rand(9) + 1
+        for i in 0...@grid_values.count
+          for j in 0...@grid_values.count
+            if scratch_pad_grid[j][i] == 0
+              scratch_pad_grid[j][i] == random_number
+            end
+          end
+        end
+       
+      end
+      puts "broke out of scratchpad grid flatten"
+
+
 
       for i in 0...@grid_values.count
-        for j in 0...@grid_values.count
-          # moving from left to right, then advancing to the next row
-          if scratch_pad_grid[j][i] == 0
-            random_number = rand(9) + 1
-            scratch_pad_grid[j][i] = random_number if scratch_pad_grid[i].each {|num| num != random_number}
-          end # if
-        end # for j
-      end # for i
-
-
-
-      for i in 0...@grid_values.count
-        p scratch_pad_grid[i].sort
         if scratch_pad_grid[i].sort == answer_array
           puzzle_row_complete_counter += 1
-        end
-      end
-
+        end # if
+      end # for
     end # until
-    puts scratch_pad_grid
-    puts "koalas"
   end # method
 end # class
 
