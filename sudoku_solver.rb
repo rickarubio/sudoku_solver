@@ -32,27 +32,29 @@ class SudokuGrid
       # Check each row of the scratch pad
       # if the sequence of values matches the answer_array, increment the counter
       for i in 0...@grid_values.count
-        if scratch_pad_grid[i].sort == answer_array
-          if transposed_scratch_pad_grid[i].sort == answer_array
+        if (scratch_pad_grid[i].sort == answer_array) && (transposed_scratch_pad_grid[i].sort == answer_array)
           puzzle_row_complete_counter += 1
-          end
         end
       end
+      puts "-------------------------"
+      p transposed_scratch_pad_grid[3].sort == answer_array
+      p transposed_scratch_pad_grid[3].sort
+      puts "-------------------------"
     end
-    p transposed_scratch_pad_grid
-    scratch_pad_grid
+    
+    return scratch_pad_grid
   end # method
 end # class
 
 sudoku_known_grid_values =[  
-  [0, 0, 3, 0, 0, 5, 0, 2, 1],
-  [0, 0, 0, 0, 0, 0, 6, 3, 0],
-  [4, 0, 8, 0, 3, 1, 9, 0, 0],
-  [8, 0, 2, 0, 1, 6, 0, 0, 4],
-  [0, 5, 1, 0, 0, 0, 8, 6, 0],
-  [7, 0, 0, 3, 5, 0, 2, 0, 9],
-  [0, 0, 7, 4, 8, 0, 5, 0, 6],
-  [0, 4, 5, 0, 0, 0, 0, 0, 0],
-  [9, 8, 0, 5, 0, 0, 1, 0, 0]]
+  [5, 3, 9, 0, 6, 7, 4, 8, 0],
+  [0, 4, 0, 8, 2, 5, 3, 0, 9],
+  [2, 8, 6, 4, 9, 3, 7, 1, 0],
+  [8, 2, 5, 0, 7, 1, 9, 4, 3],
+  [1, 6, 7, 9, 3, 4, 5, 2, 8],
+  [0, 9, 3, 2, 0, 0, 1, 7, 6],
+  [6, 7, 2, 3, 4, 9, 8, 5, 1],
+  [3, 0, 0, 7, 1, 0, 2, 9, 4],
+  [9, 1, 4, 5, 8, 2, 6, 3, 7]]
 sudoku_object = SudokuGrid.new(sudoku_known_grid_values)
-puts sudoku_object.solve
+sudoku_object.solve.each {|i| print "#{i}\n"}
