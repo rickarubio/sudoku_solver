@@ -9,6 +9,7 @@ class Sudoku
     @sudoku_columns = sudoku_rows.transpose
     # There are 9 boxes (3x3) from top left to right and continuing down
     @sudoku_boxes = create_sudoku_boxes(@sudoku_rows)
+    @known_cell_values = lock_known_cell_values(@sudoku_rows)
   end
 
   def create_sudoku_boxes(sudoku_rows)
@@ -50,8 +51,15 @@ class Sudoku
       end
       box_index += 1
     end
-    return sudoku_boxes
+    sudoku_boxes
     #sudoku_boxes.each_with_index {|box, index| print " box #{index}" + box.to_s + "\n"} # for testing
+  end
+
+  def lock_known_cell_values(sudoku_rows)
+    known_cell_values = [[], [], [], [], [], [], [], [], []]
+    sudoku_rows.each_with_index.map { |row, row_index| row.map {|cell| 
+      cell == 0 ? known_cell_values[row_index].push(false) : known_cell_values[row_index].push(true)} }
+    known_cell_values
   end
 
   def display
@@ -78,6 +86,9 @@ class Sudoku
           |- - -|
           |7|8|9|
           -------"
+    puts "Known Cell Values: "
+    @known_cell_values.each {|cell_value_row| print cell_value_row.to_s + "\n"}
+
   end
 end
 
