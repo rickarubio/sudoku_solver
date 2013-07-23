@@ -67,7 +67,9 @@ class Sudoku
     puts
     puts "Your Sudoku Boxes by the Number:"
     @sudoku_boxes.each_with_index {|box, index| print " box #{index}: " + box.to_s + "\n"}
-    print "box guide map:"
+    puts
+    puts "box guide map:"
+    print "read as [[top values], [middle values], [bottom values]] of the sudoku box"
     puts "
           -------
           |1|2|3|
