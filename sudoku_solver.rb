@@ -275,4 +275,17 @@ sudoku_puzzle = Sudoku.new([
   [6, 0, 0, 3, 4, 0, 0, 0, 1],
   [3, 0, 8, 7, 1, 0, 0, 0, 4],
   [0, 1, 0, 0, 0, 0, 6, 0, 7]])
+
+# http://www.sudokuoftheday.com/pages/s-o-t-d.php?day=3&level=5
+diabolical_sudoku = Sudoku.new([
+  [0, 0, 9, 0, 0, 0, 0, 6, 0],
+  [3, 0, 0, 0, 6, 0, 9, 0, 7],
+  [0, 0, 8, 7, 9, 5, 0, 0, 0],
+  [0, 8, 0, 0, 0, 6, 0, 0, 4],
+  [0, 0, 0, 0, 3, 0, 0, 0, 0],
+  [1, 0, 0, 2, 0, 0, 0, 8, 0],
+  [0, 0, 0, 9, 8, 7, 5, 0, 0],
+  [8, 0, 4, 0, 2, 0, 0, 0, 9],
+  [0, 3, 0, 0, 0, 0, 2, 0, 0]])
 sudoku_puzzle.display
+diabolical_sudoku.display
