@@ -110,7 +110,36 @@ class Sudoku
   end
 
   def eliminate_cell_value_possibilities_by_boxes!(possible_cell_values)
-    possible_cell_values.each_with_index do |row, row_index|
+    cell_row_offset = 0
+    @sudoku_boxes.each_with_index do |box, box_index|
+      # Offset cell rows by 3 rows, so I now start on the middle sudoku boxes (3, 4, 5)
+      if box_index == 3
+        cell_row_offset += 3
+      elsif box_index == 6
+        cell_row_offset += 3
+      end
+      # checking the leftmost 3 boxes of the sudoku grid
+      if box_index == 0 || box_index == 3 || box_index == 6
+        puts "Box #{box_index}"
+        puts "Top #{possible_cell_values[0 + cell_row_offset].slice(0, 3)}" # top box
+        puts "Mid #{possible_cell_values[1 + cell_row_offset].slice(0, 3)}" # middle box
+        puts "Bot #{possible_cell_values[2 + cell_row_offset].slice(0, 3)}" # bottom box
+      end
+      # checking the middle 3 boxes
+      if box_index == 1 || box_index == 4 || box_index == 7
+        puts "Box #{box_index}"
+        puts "Top #{possible_cell_values[0 + cell_row_offset].slice(3, 3)}" # top box
+        puts "Mid #{possible_cell_values[1 + cell_row_offset].slice(3, 3)}" # middle box
+        puts "Bot #{possible_cell_values[2 + cell_row_offset].slice(3, 3)}" # bottom box
+      end
+      # checking the rightmost 3 boxes
+      if box_index == 2 || box_index == 5 || box_index == 8
+        puts "Box #{box_index}"
+        puts "Top #{possible_cell_values[0 + cell_row_offset].slice(6, 3)}" # top box
+        puts "Mid #{possible_cell_values[1 + cell_row_offset].slice(6, 3)}" # middle box
+        puts "Bot #{possible_cell_values[2 + cell_row_offset].slice(6, 3)}" # bottom box
+      end
+      puts # delete me
     end
   end
 
