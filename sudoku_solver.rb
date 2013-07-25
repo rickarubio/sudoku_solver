@@ -12,7 +12,8 @@ class Sudoku
     @known_cell_values = lock_known_cell_values(@sudoku_rows)
     @possible_cell_values = generate_cell_value_possibilities(@sudoku_rows, @known_cell_values)
     eliminate_cell_value_possibilities_by_rows!(@possible_cell_values)
-    eliminate_cell_value_possibilities_columns!(@possible_cell_values)
+    eliminate_cell_value_possibilities_by_columns!(@possible_cell_values)
+    eliminate_cell_value_possibilities_by_boxes!(@possible_cell_values)
   end
 
   def create_sudoku_boxes(sudoku_rows)
@@ -96,7 +97,7 @@ class Sudoku
     #possible_cell_values.each { |r| print "#{r}  \n\n"}
   end
 
-  def eliminate_cell_value_possibilities_columns!(possible_cell_values)
+  def eliminate_cell_value_possibilities_by_columns!(possible_cell_values)
     possible_cell_values.each_with_index do |row, row_index|
       row.each_with_index do |element, element_column_index|
         @sudoku_columns[element_column_index].each do |column_element|
@@ -105,6 +106,11 @@ class Sudoku
           end
         end
       end
+    end
+  end
+
+  def eliminate_cell_value_possibilities_by_boxes!(possible_cell_values)
+    possible_cell_values.each_with_index do |row, row_index|
     end
   end
 
@@ -126,11 +132,11 @@ class Sudoku
     print "read as [[top values], [middle values], [bottom values]] of the sudoku box"
     puts "
           -------
-          |1|2|3|
+          |0|1|2|
           |- - -|
-          |4|5|6|
+          |3|4|5|
           |- - -|
-          |7|8|9|
+          |6|7|8|
           -------"
     puts
     puts "Known Cell Values: "
