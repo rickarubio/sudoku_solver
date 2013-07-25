@@ -10,8 +10,9 @@ class Sudoku
     # There are 9 boxes (3x3) from top left to right and continuing down
     @sudoku_boxes = create_sudoku_boxes(@sudoku_rows)
     @known_cell_values = lock_known_cell_values(@sudoku_rows)
-    @possible_cell_values = generate_cell_value_possibilities(@sudoku_rows, @sudoku_columns, @sudoku_boxes, @known_cell_values)
-    @possible_cell_values = eliminate_cell_value_possibilities_by_rows(@possible_cell_values)
+    @possible_cell_values = generate_cell_value_possibilities(@sudoku_rows, @known_cell_values)
+    eliminate_cell_value_possibilities_by_rows!(@possible_cell_values)
+    eliminate_cell_value_possibilities_columns!(@possible_cell_values)
   end
 
   def create_sudoku_boxes(sudoku_rows)
@@ -64,7 +65,7 @@ class Sudoku
     known_cell_values
   end
 
-  def generate_cell_value_possibilities(sudoku_rows, sudoku_columns, sudoku_boxes, known_cell_values)
+  def generate_cell_value_possibilities(sudoku_rows, known_cell_values)
     possible_cell_values = [[], [], [], [], [], [], [], [], []] # arranged by row
     # Generate possible values a cell may contain
     known_cell_values.each_with_index do |row, row_index|
@@ -80,13 +81,10 @@ class Sudoku
         end
       end
     end
-    # remove me after testing
-
-    # remove above me after testing
     possible_cell_values
   end
 
-  def eliminate_cell_value_possibilities_by_rows(possible_cell_values)
+  def eliminate_cell_value_possibilities_by_rows!(possible_cell_values)
     @sudoku_rows.each_with_index do |row, row_index|
       row.each_with_index do |cell, cell_index|
         if possible_cell_values[row_index].flatten.index(cell) != nil
@@ -96,6 +94,18 @@ class Sudoku
       #puts # remove me
     end
     #possible_cell_values.each { |r| print "#{r}  \n\n"}
+  end
+
+  def eliminate_cell_value_possibilities_columns!(possible_cell_values)
+    possible_cell_values.each_with_index do |row, row_index|
+      row.each_with_index do |element, element_column_index|
+        @sudoku_columns[element_column_index].each do |column_element|
+          if element.flatten.index(column_element) != nil
+            element.delete(column_element)
+          end
+        end
+      end
+    end
   end
 
   def display
@@ -127,7 +137,7 @@ class Sudoku
     @known_cell_values.each {|cell_value_row| print cell_value_row.to_s + "\n"}
     puts
     puts "Possible cell values, before eliminating possibilities"
-    possible_cell_values = generate_cell_value_possibilities(@sudoku_rows, @sudoku_columns, @sudoku_boxes, @known_cell_values)
+    possible_cell_values = generate_cell_value_possibilities(@sudoku_rows, @known_cell_values)
     possible_cell_values.each_with_index do |row, index|
       print "row #{index}:\n#{row}  \n\n"
     end
