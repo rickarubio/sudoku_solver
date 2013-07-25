@@ -10,6 +10,8 @@ class Sudoku
     # There are 9 boxes (3x3) from top left to right and continuing down
     @sudoku_boxes = create_sudoku_boxes(@sudoku_rows)
     @known_cell_values = lock_known_cell_values(@sudoku_rows)
+    @possible_cell_values = generate_cell_value_possibilities(@sudoku_rows, @sudoku_columns, @sudoku_boxes, @known_cell_values)
+    @possible_cell_values = eliminate_cell_value_possibilities_by_rows(@possible_cell_values)
   end
 
   def create_sudoku_boxes(sudoku_rows)
@@ -62,6 +64,40 @@ class Sudoku
     known_cell_values
   end
 
+  def generate_cell_value_possibilities(sudoku_rows, sudoku_columns, sudoku_boxes, known_cell_values)
+    possible_cell_values = [[], [], [], [], [], [], [], [], []] # arranged by row
+    # Generate possible values a cell may contain
+    known_cell_values.each_with_index do |row, row_index|
+      row.each_with_index do |cell, cell_index|
+        # cell being false means we don't know the cell's value for certain
+        if cell == false
+          possible_cell_values[row_index][cell_index] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+          possible_cell_values[row_index][cell_index].each_with_index do |p_cell_v, p_cell_v_index|
+          end
+        # if the cell's value is already known, then we just mark it as [0] possibilites
+        elsif cell == true
+          possible_cell_values[row_index][cell_index] = []
+        end
+      end
+    end
+    # remove me after testing
+
+    # remove above me after testing
+    possible_cell_values
+  end
+
+  def eliminate_cell_value_possibilities_by_rows(possible_cell_values)
+    @sudoku_rows.each_with_index do |row, row_index|
+      row.each_with_index do |cell, cell_index|
+        if possible_cell_values[row_index].flatten.index(cell) != nil
+          possible_cell_values[row_index].each {|i| i.delete(cell)}
+        end
+      end
+      #puts # remove me
+    end
+    #possible_cell_values.each { |r| print "#{r}  \n\n"}
+  end
+
   def display
     puts "Your Sudoku Board (arranged by rows):"
     puts "=" * @sudoku_rows[0].to_s.length
@@ -86,9 +122,21 @@ class Sudoku
           |- - -|
           |7|8|9|
           -------"
+    puts
     puts "Known Cell Values: "
     @known_cell_values.each {|cell_value_row| print cell_value_row.to_s + "\n"}
+    puts
+    puts "Possible cell values, before eliminating possibilities"
+    possible_cell_values = generate_cell_value_possibilities(@sudoku_rows, @sudoku_columns, @sudoku_boxes, @known_cell_values)
+    possible_cell_values.each_with_index do |row, index|
+      print "row #{index}:\n#{row}  \n\n"
+    end
 
+    puts "Possible cell values, AFTER eliminating possibilities"
+    puts "Empty arrays [] means the value of that cell has no possibilities, b/c it is KNOWN"
+    @possible_cell_values.each_with_index do |row, index|
+      print "row #{index}:\n#{row}  \n\n"
+    end
   end
 end
 
