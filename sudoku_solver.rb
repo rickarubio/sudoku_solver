@@ -110,36 +110,79 @@ class Sudoku
   end
 
   def eliminate_cell_value_possibilities_by_boxes!(possible_cell_values)
-    cell_row_offset = 0
-    @sudoku_boxes.each_with_index do |box, box_index|
-      # Offset cell rows by 3 rows, so I now start on the middle sudoku boxes (3, 4, 5)
-      if box_index == 3
-        cell_row_offset += 3
-      elsif box_index == 6
-        cell_row_offset += 3
+    possible_cell_values.each_with_index do |row, row_index|
+      if row_index == 0 || row_index == 1 || row_index == 2
+        # check the first 3 elements of each row for eliminating box 0-2 values
+        @sudoku_boxes[0].flatten.each do |number|
+          (0..2).each do |element_index|
+            if possible_cell_values[row_index][element_index].index(number) != nil
+              possible_cell_values[row_index][element_index].delete(number)
+            end
+          end
+        end
+        @sudoku_boxes[1].flatten.each do |number|
+          (3..5).each do |element_index|
+            if possible_cell_values[row_index][element_index].index(number) != nil
+              possible_cell_values[row_index][element_index].delete(number)
+            end
+          end
+        end
+        @sudoku_boxes[2].flatten.each do |number|
+          (6..8).each do |element_index|
+            if possible_cell_values[row_index][element_index].index(number) != nil
+              possible_cell_values[row_index][element_index].delete(number)
+            end
+          end
+        end
       end
-      # checking the leftmost 3 boxes of the sudoku grid
-      if box_index == 0 || box_index == 3 || box_index == 6
-        puts "Box #{box_index}"
-        puts "Top #{possible_cell_values[0 + cell_row_offset].slice(0, 3)}" # top box
-        puts "Mid #{possible_cell_values[1 + cell_row_offset].slice(0, 3)}" # middle box
-        puts "Bot #{possible_cell_values[2 + cell_row_offset].slice(0, 3)}" # bottom box
+      if row_index == 3 || row_index == 4 || row_index == 5
+        # check the first 3 elements of each row for eliminating box 3-5 values
+        @sudoku_boxes[3].flatten.each do |number|
+          (0..2).each do |element_index|
+            if possible_cell_values[row_index][element_index].index(number) != nil
+              possible_cell_values[row_index][element_index].delete(number)
+            end
+          end
+        end
+        @sudoku_boxes[4].flatten.each do |number|
+          (3..5).each do |element_index|
+            if possible_cell_values[row_index][element_index].index(number) != nil
+              possible_cell_values[row_index][element_index].delete(number)
+            end
+          end
+        end
+        @sudoku_boxes[5].flatten.each do |number|
+          (6..8).each do |element_index|
+            if possible_cell_values[row_index][element_index].index(number) != nil
+              possible_cell_values[row_index][element_index].delete(number)
+            end
+          end
+        end
       end
-      # checking the middle 3 boxes
-      if box_index == 1 || box_index == 4 || box_index == 7
-        puts "Box #{box_index}"
-        puts "Top #{possible_cell_values[0 + cell_row_offset].slice(3, 3)}" # top box
-        puts "Mid #{possible_cell_values[1 + cell_row_offset].slice(3, 3)}" # middle box
-        puts "Bot #{possible_cell_values[2 + cell_row_offset].slice(3, 3)}" # bottom box
+      if row_index == 6 || row_index == 7 || row_index == 8
+        # check the first 3 elements of each row for eliminating box 6-8 values
+        @sudoku_boxes[6].flatten.each do |number|
+          (0..2).each do |element_index|
+            if possible_cell_values[row_index][element_index].index(number) != nil
+              possible_cell_values[row_index][element_index].delete(number)
+            end
+          end
+        end
+        @sudoku_boxes[7].flatten.each do |number|
+          (3..5).each do |element_index|
+            if possible_cell_values[row_index][element_index].index(number) != nil
+              possible_cell_values[row_index][element_index].delete(number)
+            end
+          end
+        end
+        @sudoku_boxes[8].flatten.each do |number|
+          (6..8).each do |element_index|
+            if possible_cell_values[row_index][element_index].index(number) != nil
+              possible_cell_values[row_index][element_index].delete(number)
+            end
+          end
+        end
       end
-      # checking the rightmost 3 boxes
-      if box_index == 2 || box_index == 5 || box_index == 8
-        puts "Box #{box_index}"
-        puts "Top #{possible_cell_values[0 + cell_row_offset].slice(6, 3)}" # top box
-        puts "Mid #{possible_cell_values[1 + cell_row_offset].slice(6, 3)}" # middle box
-        puts "Bot #{possible_cell_values[2 + cell_row_offset].slice(6, 3)}" # bottom box
-      end
-      puts # delete me
     end
   end
 
