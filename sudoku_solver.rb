@@ -14,6 +14,9 @@ class Sudoku
     eliminate_cell_value_possibilities_by_rows!(@possible_cell_values)
     eliminate_cell_value_possibilities_by_columns!(@possible_cell_values)
     eliminate_cell_value_possibilities_by_boxes!(@possible_cell_values)
+    if found_new_known_cell_value?(@possible_cell_values)
+      keep_reducing_possibilities(@sudoku_rows, @sudoku_columns, @sudoku_boxes, @known_cell_values, @possible_cell_values)
+    end
   end
 
   def create_sudoku_boxes(sudoku_rows)
@@ -183,6 +186,39 @@ class Sudoku
           end
         end
       end
+    end
+  end
+
+  def found_new_known_cell_value?(possible_cell_values)
+    new_known_values_found = false
+    possible_cell_values.each_with_index do |row, row_index|
+      row.each_with_index do |cell, cell_index|
+        if cell.count == 1
+          @known_cell_values[row_index][cell_index] = true
+          new_known_values_found = true
+        end
+      end
+    end
+    return new_known_values_found
+  end
+
+  def keep_reducing_possibilities(sudoku_rows, sudoku_columns, sudoku_boxes, known_cell_values, possible_cell_values)
+    @sudoku_rows = sudoku_rows
+    known_cell_values.each_with_index do |row, row_index|
+      row.each_with_index do |cell, cell_index|
+        if (cell == true && possible_cell_values[row_index][cell_index].empty? == false)
+          sudoku_rows[row_index][cell_index] = possible_cell_values[row_index][cell_index][0]
+        end
+      end
+    end
+    @sudoku_columns = @sudoku_rows.transpose
+    @sudoku_boxes = create_sudoku_boxes(@sudoku_rows)
+    @known_cell_values = lock_known_cell_values(@sudoku_rows)
+    eliminate_cell_value_possibilities_by_rows!(@possible_cell_values)
+    eliminate_cell_value_possibilities_by_columns!(@possible_cell_values)
+    eliminate_cell_value_possibilities_by_boxes!(@possible_cell_values)
+    if found_new_known_cell_value?(@possible_cell_values)
+      keep_reducing_possibilities(@sudoku_rows, @sudoku_columns, @sudoku_boxes, @known_cell_values, @possible_cell_values)
     end
   end
 
