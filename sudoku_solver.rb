@@ -14,9 +14,8 @@ class Sudoku
     eliminate_cell_value_possibilities_by_rows!(@possible_cell_values)
     eliminate_cell_value_possibilities_by_columns!(@possible_cell_values)
     eliminate_cell_value_possibilities_by_boxes!(@possible_cell_values)
-    if found_new_known_cell_value?(@possible_cell_values)
-      keep_reducing_possibilities(@sudoku_rows, @sudoku_columns, @sudoku_boxes, @known_cell_values, @possible_cell_values)
-    end
+    found_new_known_cell_value?(@possible_cell_values)
+    keep_reducing_possibilities(@sudoku_rows, @sudoku_columns, @sudoku_boxes, @known_cell_values, @possible_cell_values)
   end
 
   def create_sudoku_boxes(sudoku_rows)
@@ -190,6 +189,8 @@ class Sudoku
   end
 
   def found_new_known_cell_value?(possible_cell_values)
+    # checks for cell possibilities with just 1 possibility
+    # which means that is the answer for that cell
     new_known_values_found = false
     possible_cell_values.each_with_index do |row, row_index|
       row.each_with_index do |cell, cell_index|
@@ -201,6 +202,31 @@ class Sudoku
     end
     return new_known_values_found
   end
+
+  def find_unique_possibilities_in_box_row_column(sudoku_rows, sudoku_columns, sudoku_boxes, possible_cell_values)
+    # first we will check the rows for possibilities that only occur once
+    valid_values = [1,2,3,4,5,6,7,8,9]
+    value_occurence_counter = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    # first scan the rows for a single possibility
+    possible_cell_values.each_with_index do |row, row_index|
+      row.each do |cell|
+        cell.each do |value|
+          value_occurence_counter[(value -1)] += 1 if value != nil
+        end # value
+      end # cell
+      value_occurence_counter.each_with_index do |occurence, occurence_index|
+        if occurence == 1
+          possible_cell_values[row_index].each_with_index do |cell, cell_index|
+            if cell.index(occurence_index+1) != nil
+              @possible_cell_values[row_index][cell_index] = [occurence_index+1]
+            end
+          end
+        end
+      end
+      value_occurence_counter = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    end # row
+  end
+
 
   def keep_reducing_possibilities(sudoku_rows, sudoku_columns, sudoku_boxes, known_cell_values, possible_cell_values)
     @sudoku_rows = sudoku_rows
@@ -217,6 +243,12 @@ class Sudoku
     eliminate_cell_value_possibilities_by_rows!(@possible_cell_values)
     eliminate_cell_value_possibilities_by_columns!(@possible_cell_values)
     eliminate_cell_value_possibilities_by_boxes!(@possible_cell_values)
+    if found_new_known_cell_value?(@possible_cell_values)
+      keep_reducing_possibilities(@sudoku_rows, @sudoku_columns, @sudoku_boxes, @known_cell_values, @possible_cell_values)
+    end
+    # At this point we have reduced as many possibilities as we can
+    # We have found no more single value possibilities for a cell
+    find_unique_possibilities_in_box_row_column(@sudoku_rows, @sudoku_columns, @sudoku_boxes, @possible_cell_values)
     if found_new_known_cell_value?(@possible_cell_values)
       keep_reducing_possibilities(@sudoku_rows, @sudoku_columns, @sudoku_boxes, @known_cell_values, @possible_cell_values)
     end
@@ -263,7 +295,6 @@ class Sudoku
     end
   end
 end
-
 # http://www.sudokukingdom.com/images/BlockTutorSolve.gif
 sudoku_puzzle = Sudoku.new([
   [0, 0, 9, 1, 0, 0, 0, 0, 2],
@@ -276,7 +307,9 @@ sudoku_puzzle = Sudoku.new([
   [3, 0, 8, 7, 1, 0, 0, 0, 4],
   [0, 1, 0, 0, 0, 0, 6, 0, 7]])
 
+# July 22nd Puzzle
 # http://www.sudokuoftheday.com/pages/s-o-t-d.php?day=3&level=5
+# http://www.sudokuoftheday.com/image/image.php?size=230&sg=749312865351468927628795431582176394467839152193254786216987543874523619935641278
 diabolical_sudoku = Sudoku.new([
   [0, 0, 9, 0, 0, 0, 0, 6, 0],
   [3, 0, 0, 0, 6, 0, 9, 0, 7],
